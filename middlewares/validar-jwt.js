@@ -4,7 +4,7 @@ const validarJWT = (req, res, next) =>{
 
     // Leer el token
     const token = req.header('x-token');
-    console.log(token);
+    //console.log(token);
 
     // En este punto verificamos el token
 
