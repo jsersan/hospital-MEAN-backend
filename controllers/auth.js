@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const {response} = require('express');
+const { googleVerify } = require('../helper/google-verify');
 const { generarJWT } = require('../helper/jwt');
 
 const Usuario = require('../models/usuario');
@@ -32,7 +33,7 @@ const login = async ( req, res = response ) =>{
         if( !validPassword ){
             return res.status(400).json({
                 ok:false,
-                msh: 'Contraseña o email no válidos'
+                msg: 'Contraseña o email no válidos'
             });
         }
 
@@ -54,6 +55,78 @@ const login = async ( req, res = response ) =>{
 
 }
 
+const googleSignIn = async ( req, res = response )=>{
+
+    // Defino el token
+
+     const googleToken = req.body.token;
+
+    try {
+
+        const {name, email, picture} = await googleVerify( googleToken);
+
+        const usuarioDB = await Usuario.findOne({ email });
+        let usuario;
+        if(!usuarioDB) {
+
+            // No existe el usuario. Creo uno nuevo
+            usuario = new Usuario({
+                nombre: name,
+                email,
+                password: '@@@',  // Ponemos algo para saber que el password no puede ser vacío
+                img: picture,
+                google:true
+            }); 
+
+        } else {
+            // Pasamos de autenticación de usuario y contraseña a auten. de google
+            // Existe usuario
+
+            usuario = usuarioDB;
+            usuario.google = true;
+        } 
+
+        // Guardar en la base de Datos
+
+        await usuario.save(); 
+
+        // Generar el token - JWT
+
+        const token = await generarJWT(usuarioDB.id);
+     
+        res.json({
+            ok: true,
+            msg: 'Google Signin',
+            token
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(401).json({
+            ok: false,
+            msg: 'Token no válido',
+        });
+    } 
+}
+
+
+const renewToken = async(req, res = response) => {
+
+    const uid = req.uid;
+
+    // Generar el TOKEN - JWT
+    const token = await generarJWT( uid );
+
+
+    res.json({
+        ok: true,
+        token
+    });
+
+}
+
+
 module.exports = {
-    login
+    login,
+    googleSignIn,
+    renewToken
 }

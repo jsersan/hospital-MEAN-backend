@@ -25,6 +25,10 @@ app.use(cors());
 
 app.use( express.json() );
 
+// Directorio público
+app.use(express.static('public'))
+
+
 // Rutas
 app.use('/api/usuarios',require('./routes/usuarios'));
 app.use('/api/hospitales',require('./routes/hospitales'));
