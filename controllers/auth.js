@@ -67,24 +67,25 @@ const googleSignIn = async ( req, res = response )=>{
 
         const usuarioDB = await Usuario.findOne({ email });
         let usuario;
-        if(!usuarioDB) {
-
-            // No existe el usuario. Creo uno nuevo
+        if (!usuarioDB) {
+            // si no existe el usuario autenticándose
             usuario = new Usuario({
-                nombre: name,
-                email,
-                password: '@@@',  // Ponemos algo para saber que el password no puede ser vacío
-                img: picture,
-                google:true
-            }); 
-
-        } else {
-            // Pasamos de autenticación de usuario y contraseña a auten. de google
-            // Existe usuario
-
+              nombre: name,
+              email,
+              password: "@@@",
+              img: picture,
+              google: true
+            });
+          } else {
+            // si existe ya el usuario en DB
             usuario = usuarioDB;
             usuario.google = true;
-        } 
+       
+            // si el usuario no tiene imagen, le asignamos la de google
+            if (!usuario.img) {
+              usuario.img = picture;
+            }
+          }
 
         // Guardar en la base de Datos
 
@@ -116,10 +117,14 @@ const renewToken = async(req, res = response) => {
     // Generar el TOKEN - JWT
     const token = await generarJWT( uid );
 
+    // Obtener el usuario por UID
+
+    const usuario = await Usuario.findById(uid);
 
     res.json({
         ok: true,
-        token
+        token,
+        usuario
     });
 
 }

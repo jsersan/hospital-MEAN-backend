@@ -23,9 +23,17 @@ const UsuarioSchema = Schema({
         required: true,
         default: 'USER_ROLE'
     },
+    usuario:{       
+        type: Schema.Types.ObjectId,
+        ref: 'Usuario',
+        //required: true
+    },
     google:{
         type: Boolean,
         default: false
+    },
+    uid:{
+        type: String
     }
 });
 

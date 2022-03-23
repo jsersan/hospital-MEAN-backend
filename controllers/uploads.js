@@ -78,7 +78,6 @@ const fileUpload = (req, res = response)=>{
 
         actualizarImagen( tipo, id, nombreArchivo );
 
-
         res.json({
             ok: true,
             msg: 'Archivo subido',
@@ -101,7 +100,7 @@ const retornaImagen = (req, res = response) =>{
     if (fs.existsSync(pathImg)){
         res.sendFile(pathImg);
     }else{
-        const pathImg = path.join(__dirname, `../uploads/no-image.jpg`);
+        const pathImg = path.join(__dirname, `../uploads/no-image.jpeg`);
         res.sendFile(pathImg);
     }
 }
