@@ -12,7 +12,8 @@ const {
     getHospitales,
     crearHospital,
     actualizarHospital,
-    borrarHospital
+    borrarHospital,
+    getHospitalById
 } = require('../controllers/hospitales');
 
 const { check } = require('express-validator');
@@ -21,6 +22,11 @@ const { check } = require('express-validator');
 const router = Router();
 
 router.get('/', getHospitales );
+
+router.get('/:id',
+    validarJWT,
+    getHospitalById 
+);
 
 router.post('/',
     [

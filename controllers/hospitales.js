@@ -13,6 +13,30 @@ const getHospitales = async (req, res = response )=>{
     }) 
 }
 
+const getHospitalById = async (req, res = response) => {
+
+    const id = req.params.id;
+
+    try {
+        const hospital = await Hospital.findById(id)
+            .populate('usuario', 'nombre');
+
+        res.json({
+            ok: true,
+            hospital
+        })
+
+        console.log(res.json);
+
+    } catch (error) {
+        console.log(error);
+        res.json({
+            ok: false,
+            msg:' Hable con el administrador'
+        })
+    }
+}
+
 const crearHospital = async (req, res= response )=>{
 
     const uid = req.uid;
@@ -112,5 +136,6 @@ module.exports = {
     getHospitales,
     crearHospital,
     actualizarHospital,
-    borrarHospital
+    borrarHospital,
+    getHospitalById
 }

@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const {response} = require('express');
 const { googleVerify } = require('../helper/google-verify');
 const { generarJWT } = require('../helper/jwt');
+const { getMenuFrontEnd } = require('../helper/menu-frontend');
 
 const Usuario = require('../models/usuario');
 
@@ -19,7 +20,7 @@ const login = async ( req, res = response ) =>{
         if(!usuarioDB){
             return res.status(404).json({
                 ok:false,
-                msh: 'Contraseña o email no válidos'
+                msg: 'Contraseña o email no válidos'
             });
         }
 
@@ -43,8 +44,9 @@ const login = async ( req, res = response ) =>{
 
         res.json({
             ok:true,
-            token
-        })
+            token,
+            menu: getMenuFrontEnd(usuarioDB.role)
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -98,7 +100,8 @@ const googleSignIn = async ( req, res = response )=>{
         res.json({
             ok: true,
             msg: 'Google Signin',
-            token
+            token,
+            menu: getMenuFrontEnd(usuario.role)
         });
     } catch (error) {
         console.log(error);
@@ -124,7 +127,8 @@ const renewToken = async(req, res = response) => {
     res.json({
         ok: true,
         token,
-        usuario
+        usuario,
+        menu: getMenuFrontEnd(usuario.role)        
     });
 
 }
