@@ -8,21 +8,22 @@ const { dbConnection } = require('./database/config');
 const app = express();
 
 // ============================================
-// CONFIGURACIÓN CORS
+// CONFIGURACIÓN CORS - ✅ ACTUALIZADA
 // ============================================
 
 const allowedOrigins = [
-    'http://localhost:4200',                          // ✅ AÑADE ESTO
+    'http://localhost:4200',                          // ✅ Desarrollo local
     'http://127.0.0.1:4200',
     'https://hospital-mean-backend.onrender.com',
-    'http://txemaserrano.com',
-    'http://www.txemaserrano.com',
-    'https://txemaserrano.com',
-    'https://www.txemaserrano.com'
-  ];
+    'http://txemaserrano.com',                        // ✅ AÑADIDO
+    'http://www.txemaserrano.com',                    // ✅ AÑADIDO
+    'https://txemaserrano.com',                       // ✅ AÑADIDO
+    'https://www.txemaserrano.com'                    // ✅ AÑADIDO
+];
 
 app.use(cors({
   origin: function(origin, callback) {
+    // Permitir requests sin origin (como Postman, curl, etc)
     if (!origin) {
       return callback(null, true);
     }
@@ -109,5 +110,7 @@ app.listen(PORT, () => {
   console.log('🎉 ================================');
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
   console.log(`🌍 Entorno: ${process.env.NODE_ENV || 'development'}`);
+  console.log('📍 Orígenes permitidos:');
+  allowedOrigins.forEach(origin => console.log(`   - ${origin}`));
   console.log('🎉 ================================\n');
 });
