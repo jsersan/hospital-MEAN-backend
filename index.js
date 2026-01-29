@@ -14,7 +14,7 @@ const app = express();
 const allowedOrigins = [
     'http://localhost:4200',                          // ✅ Desarrollo local
     'http://127.0.0.1:4200',
-    'https://hospital-mean-backend.onrender.com',
+    'https://hospital-mean-backend.onrender.com/',
     'http://txemaserrano.com',                        // ✅ AÑADIDO
     'http://www.txemaserrano.com',                    // ✅ AÑADIDO
     'https://txemaserrano.com',                       // ✅ AÑADIDO
